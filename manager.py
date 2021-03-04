@@ -35,31 +35,31 @@ class NPCGenerator:
             gender = self.get_gender(name)
         else:
             gender = random.choice(list(set(tags).intersection(GENDERS)))
-        specie = self.get_gendered_trait(gender, "SPECIES", tags)
+        specie, _ = self.get_gendered_trait(gender, "SPECIES", tags)
         if gender == WOM:
             e_gender = 'e'
         elif gender == ENB:
             e_gender = '·e'
         else:
             e_gender = ""
-        job = self.get_gendered_trait(gender, "JOBS", tags)
-        appearance = self.select_trait("APPEARANCES", tags).lower()
-        behavior = self.select_trait("BEHAVIOR", tags).lower()
-        e_behavior = "e" if FEM in self.tags[behavior.upper()] else ""
-        personality = self.get_gendered_trait(gender, "PERSONALITY", tags).lower()
-        personality_e = ""
-        if GENDERED in self.tags[personality.upper()]:
-            if gender == WOM:
-                personality_e = "e"
-            elif gender == ENB:
-                personality_e = "·e"
+        job, _ = self.get_gendered_trait(gender, "JOBS", tags)
+        appearance, _ = self.get_gendered_trait(gender, "APPEARANCES", tags)
+        behavior, behavior_key = self.get_gendered_trait(gender, "BEHAVIOR", tags)
+        if "adj" in self.tags[behavior_key.upper()]:
+            behavior = f"est {behavior}"
+        elif "poss" in self.tags[behavior_key.upper()]:
+            if "plur" in self.tags[behavior_key.upper()]:
+                behavior = f"a de {behavior}"
+            else:
+                e_behavior = "e" if FEM in self.tags[behavior.upper()] else ""
+                behavior = f"a un{e_behavior} {behavior}"
+        personality, _ = self.get_gendered_trait(gender, "PERSONALITY", tags)
 
         accessories = self.select_trait("ACCESSORIES", tags).lower()
         e_accessories = "e" if FEM in self.tags[accessories.upper()] else ""
 
-        print(
-            f"{name} est un{e_gender} {job} {specie} d'apparence {appearance}, a un{e_behavior} {behavior}, "
-            f"semble être {personality}{personality_e} et porte un{e_accessories} {accessories}")
+        return f"{name.capitalize()} est un{e_gender} {job} {specie} d'apparence {appearance}, {behavior}, " \
+               f"semble être {personality} et a un{e_accessories} {accessories}"
 
     def get_gender(self, name: str):
         tags = self.tags[name.upper()]
@@ -86,20 +86,22 @@ class NPCGenerator:
             genders = GENDERS.intersection(self.tags[selected_trait.upper()])
             if not genders or gender in genders:
                 if gender == WOM and GENDERED in self.tags[selected_trait.upper()]:
-                    return f"{selected_trait}e"
+                    return f"{selected_trait}e", selected_trait
+                elif gender == ENB and GENDERED in self.tags[selected_trait.upper()]:
+                    return f"{selected_trait}·e", selected_trait
                 else:
-                    return selected_trait
+                    return selected_trait, selected_trait
             else:
                 if GENDERED in self.tags[selected_trait.upper()]:
                     if gender == WOM:
-                        return f"{selected_trait}e"
+                        return f"{selected_trait}e", selected_trait
                     elif gender == ENB:
-                        return f"{selected_trait}·e"
+                        return f"{selected_trait}·e", selected_trait
                     elif gender == MAN:
-                        return selected_trait
+                        return selected_trait, selected_trait
 
     def get_trait(self, trait):
-        return random.choice(self.traits[trait]).capitalize()
+        return random.choice(self.traits[trait])
 
     def get_tags(self, section):
         tags = list()
@@ -108,6 +110,25 @@ class NPCGenerator:
             for t in self.config[section][traits].split(','):
                 trait_set.add(t.strip())
             tags.append(trait_set)
+        return tags
+
+    def get_all_tags(self):
+        tags = list()
+        for sec in self.config:
+            for tag_list in list(self.get_tags(sec)):
+                for tag in tag_list:
+                    if tag not in tags:
+                        tags.append(tag)
+        return tags
+
+    def get_tags_per_section(self):
+        tags = dict()
+        for sec in self.config:
+            tags[sec] = list()
+            for tag_list in list(self.get_tags(sec)):
+                for tag in tag_list:
+                    if tag not in tags[sec]:
+                        tags[sec].append(tag)
         return tags
 
     def select_trait(self, trait: str, tags) -> str:
@@ -131,4 +152,4 @@ if __name__ == '__main__':
     npc = ConfigParser()
     npc.read("npc.ini", "utf8")
     npc_generator = NPCGenerator(npc)
-    npc_generator.generate('n')
+    print(npc_generator.generate())
