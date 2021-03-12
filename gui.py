@@ -1,6 +1,7 @@
 import sys
 from configparser import ConfigParser
 
+from PySide2.QtCore import Qt
 from PySide2.QtGui import QClipboard
 from PySide2.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QPushButton, QWidget, QTabWidget, \
     QLineEdit, QHBoxLayout, QLabel, QCheckBox
@@ -101,6 +102,50 @@ class GeneratorPanel(QWidget):
         self.copy_npc_button.clicked.connect(self.get_description)
         self.layout.addWidget(self.copy_npc_button)
 
+        self.stat_button = QPushButton("Generate characteristics")
+        self.stat_button.clicked.connect(self.get_characteristics)
+        self.layout.addWidget(self.stat_button)
+
+        self.carac_line = QHBoxLayout()
+
+        vig_layout = QVBoxLayout()
+        vig_layout.addWidget(QLabel("Vigueur"), 0, Qt.AlignCenter)
+        self.vigueur = QLabel()
+        vig_layout.addWidget(self.vigueur, 0, Qt.AlignCenter)
+        self.carac_line.addLayout(vig_layout)
+
+        agi_layout = QVBoxLayout()
+        agi_layout.addWidget(QLabel("Agilité"), 0, Qt.AlignCenter)
+        self.agilite = QLabel()
+        agi_layout.addWidget(self.agilite, 0, Qt.AlignCenter)
+        self.carac_line.addLayout(agi_layout)
+
+        int_layout = QVBoxLayout()
+        int_layout.addWidget(QLabel("Intelligence"), 0, Qt.AlignCenter)
+        self.intelligence = QLabel()
+        int_layout.addWidget(self.intelligence, 0, Qt.AlignCenter)
+        self.carac_line.addLayout(int_layout)
+
+        rus_layout = QVBoxLayout()
+        rus_layout.addWidget(QLabel("Ruse"), 0, Qt.AlignCenter)
+        self.ruse = QLabel()
+        rus_layout.addWidget(self.ruse, 0, Qt.AlignCenter)
+        self.carac_line.addLayout(rus_layout)
+
+        vol_layout = QVBoxLayout()
+        vol_layout.addWidget(QLabel("Volonté"), 0, Qt.AlignCenter)
+        self.volonte = QLabel()
+        vol_layout.addWidget(self.volonte, 0, Qt.AlignCenter)
+        self.carac_line.addLayout(vol_layout)
+
+        pre_layout = QVBoxLayout()
+        pre_layout.addWidget(QLabel("Présence"), 0, Qt.AlignCenter)
+        self.presence = QLabel()
+        pre_layout.addWidget(self.presence, 0, Qt.AlignCenter)
+        self.carac_line.addLayout(pre_layout)
+
+        self.layout.addLayout(self.carac_line)
+
         self.setLayout(self.layout)
 
     def get_generated(self):
@@ -141,6 +186,17 @@ class GeneratorPanel(QWidget):
                           f"d'apparence {self.appearance_label.text()}, {self.behavior_label.text()}, semble être " \
                           f"{self.personality_label.text()} et a {self.accessories_label.text()}"
         QClipboard().setText(npc_description)
+
+    def get_characteristics(self):
+        vigueur, agilite, intelligence, \
+        ruse, volonte, presence = self.npc.get_characteristics("sw", self.specie_label.text().upper())
+        self.vigueur.setText(str(vigueur))
+        self.agilite.setText(str(agilite))
+        self.intelligence.setText(str(intelligence))
+        self.ruse.setText(str(ruse))
+        self.volonte.setText(str(volonte))
+        self.presence.setText(str(presence))
+
 
 
 def main():

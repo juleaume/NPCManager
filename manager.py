@@ -60,7 +60,8 @@ class NPCGenerator:
         traits["accessories"] = accessories
         return traits
 
-    def get_gender(self, tags: set):
+    @staticmethod
+    def get_gender(tags: set):
         if GENDERS.issubset(tags):
             return random.choice(list(GENDERS))
         elif {WOM, ENB}.issubset(tags):
@@ -144,6 +145,30 @@ class NPCGenerator:
                 return True
         return False
 
+    @staticmethod
+    def get_characteristics(game: str, specie: str):
+        stats = ConfigParser()
+        stats.read("stats.ini", "utf8")
+        if '·' in specie:
+            specie = specie[:-2]
+        if game == "sw":
+            try:
+                vig_b, agi_b, int_b, rus_b, vol_b, pre_b = stats[game.upper()][specie].split(', ')
+                return get_char(game, int(vig_b)), get_char(game, int(agi_b)), get_char(game, int(int_b)), \
+                       get_char(game, int(rus_b)), get_char(game, int(vol_b)), get_char(game, int(pre_b))
+            except KeyError:
+                print(f"No stats for {specie} in game {game}")
+                return 0, 0, 0, 0, 0, 0
+
+
+def get_char(game: str, bias: int):
+    if game == "sw":
+        return round(random.triangular(1, 6, bias))
+    elif game == "fantasy":
+        return round(random.triangular(1, 20, bias))
+    else:
+        return 0
+
 
 def main():
     npc = ConfigParser()
@@ -170,6 +195,7 @@ def main():
                       f"{traits['appearance']}, {traits['behavior']}, semble être {traits['personality']} et " \
                       f"a {det_accessories} {traits['accessories']}"
     print(npc_description)
+    print(npc_generator.get_characteristics('sw', traits['specie']))
 
 
 if __name__ == '__main__':
