@@ -4,6 +4,8 @@ import random
 GENDERED = "gendered"
 MASC = "masc"
 FEM = "fem"
+PLUR = "plur"
+PLURS = "plurs"
 UNI = "uni"
 WOM = 'w'
 MAN = 'm'
@@ -30,18 +32,14 @@ class NPCGenerator:
         return traits, tags
 
     def generate(self, *tags):
+        traits = dict()
         name = self.select_trait("NAMES", tags)
         if not bool(set(tags).intersection(GENDERS)):
             gender = self.get_gender(name)
         else:
             gender = random.choice(list(set(tags).intersection(GENDERS)))
         specie, _ = self.get_gendered_trait(gender, "SPECIES", tags)
-        if gender == WOM:
-            e_gender = 'e'
-        elif gender == ENB:
-            e_gender = '·e'
-        else:
-            e_gender = ""
+
         job, _ = self.get_gendered_trait(gender, "JOBS", tags)
         appearance, _ = self.get_gendered_trait(gender, "APPEARANCES", tags)
         behavior, behavior_key = self.get_gendered_trait(gender, "BEHAVIOR", tags)
@@ -56,10 +54,16 @@ class NPCGenerator:
         personality, _ = self.get_gendered_trait(gender, "PERSONALITY", tags)
 
         accessories = self.select_trait("ACCESSORIES", tags).lower()
-        e_accessories = "e" if FEM in self.tags[accessories.upper()] else ""
 
-        return f"{name.capitalize()} est un{e_gender} {job} {specie} d'apparence {appearance}, {behavior}, " \
-               f"semble être {personality} et a un{e_accessories} {accessories}"
+        traits["name"] = name.capitalize()
+        traits["gender"] = gender
+        traits["job"] = job
+        traits["specie"] = specie
+        traits["appearance"] = appearance
+        traits["behavior"] = behavior
+        traits["personality"] = personality
+        traits["accessories"] = accessories
+        return traits
 
     def get_gender(self, name: str):
         tags = self.tags[name.upper()]
@@ -148,8 +152,32 @@ class NPCGenerator:
         return False
 
 
-if __name__ == '__main__':
+def main():
     npc = ConfigParser()
     npc.read("npc.ini", "utf8")
     npc_generator = NPCGenerator(npc)
-    print(npc_generator.generate())
+    traits = npc_generator.generate()
+    if traits['gender'] == WOM:
+        e_gender = 'e'
+    elif traits['gender'] == ENB:
+        e_gender = '·e'
+    else:
+        e_gender = ""
+    if FEM in npc_generator.tags[traits['accessories'].upper()]:
+        det_accessories = "une"
+    elif MASC in npc_generator.tags[traits['accessories'].upper()]:
+        det_accessories = "un"
+    elif PLUR in npc_generator.tags[traits['accessories'].upper()]:
+        det_accessories = "de"
+    elif PLURS in npc_generator.tags[traits['accessories'].upper()]:
+        det_accessories = "des"
+    else:
+        det_accessories = ""
+    npc_description = f"{traits['name']} est un{e_gender} {traits['job']} {traits['specie']} d'apparence " \
+                      f"{traits['appearance']}, {traits['behavior']}, semble être {traits['personality']} et " \
+                      f"a {det_accessories} {traits['accessories']}"
+    print(npc_description)
+
+
+if __name__ == '__main__':
+    main()
