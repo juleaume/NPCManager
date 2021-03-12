@@ -1,6 +1,7 @@
 import sys
 from configparser import ConfigParser
 
+from PySide2.QtGui import QClipboard
 from PySide2.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QPushButton, QWidget, QTabWidget, \
     QLineEdit, QHBoxLayout, QLabel, QCheckBox
 
@@ -95,6 +96,11 @@ class GeneratorPanel(QWidget):
         self.generate_button = QPushButton("Generate NPC")
         self.generate_button.clicked.connect(lambda: self.get_generated())
         self.layout.addWidget(self.generate_button)
+
+        self.copy_npc_button = QPushButton("Copy NPC")
+        self.copy_npc_button.clicked.connect(self.get_description)
+        self.layout.addWidget(self.copy_npc_button)
+
         self.setLayout(self.layout)
 
     def get_generated(self):
@@ -129,6 +135,12 @@ class GeneratorPanel(QWidget):
             self.personality_label.setText(traits['personality'])
         if not self.fix_accessories.isChecked():
             self.accessories_label.setText(f"{det_accessories} {traits['accessories']}")
+
+    def get_description(self):
+        npc_description = f"{self.name_label.text()} est {self.job_label.text()} {self.specie_label.text()} " \
+                          f"d'apparence {self.appearance_label.text()}, {self.behavior_label.text()}, semble être " \
+                          f"{self.personality_label.text()} et a {self.accessories_label.text()}"
+        QClipboard().setText(npc_description)
 
 
 def main():
