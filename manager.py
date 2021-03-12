@@ -23,12 +23,16 @@ class NPCGenerator:
         return traits, tags
 
     def generate(self, *tags):
+        tags = set(tags)
         traits = dict()
-        name = self.select_trait("NAMES", tags)
-        if not bool(set(tags).intersection(GENDERS)):
-            gender = self.get_gender(name)
+        if not set(tags) & GENDERS:
+            gender = self.get_gender(tags)
         else:
-            gender = random.choice(list(set(tags).intersection(GENDERS)))
+            gender = random.choice(list(tags & GENDERS))
+        tags -= GENDERS
+        tags.add(gender)
+
+        name = self.select_trait("NAMES", tags)
         specie, _ = self.get_gendered_trait(gender, "SPECIES", tags)
 
         job, _ = self.get_gendered_trait(gender, "JOBS", tags)
@@ -56,8 +60,7 @@ class NPCGenerator:
         traits["accessories"] = accessories
         return traits
 
-    def get_gender(self, name: str):
-        tags = self.tags[name.upper()]
+    def get_gender(self, tags: set):
         if GENDERS.issubset(tags):
             return random.choice(list(GENDERS))
         elif {WOM, ENB}.issubset(tags):
@@ -126,8 +129,7 @@ class NPCGenerator:
                         tags[sec].append(tag)
         return tags
 
-    def select_trait(self, trait: str, tags) -> str:
-        tags = set(tags)
+    def select_trait(self, trait: str, tags: set) -> str:
         selected_trait = self.get_trait(trait)
         if not self.check_tag(trait, tags):
             return selected_trait
