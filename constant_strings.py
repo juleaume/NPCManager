@@ -1,0 +1,10 @@
+GENDERED = "gendered"
+MASC = "masc"
+FEM = "fem"
+PLUR = "plur"
+PLURS = "plurs"
+UNI = "uni"
+WOM = 'w'
+MAN = 'm'
+ENB = 'n'
+GENDERS = {WOM, MAN, ENB}

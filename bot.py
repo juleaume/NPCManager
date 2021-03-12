@@ -6,6 +6,7 @@ from discord.ext import commands
 from dotenv import load_dotenv
 
 from manager import NPCGenerator
+from constant_strings import *
 
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
@@ -25,8 +26,27 @@ async def on_ready():
 
 @bot.command(name="generate", help="Generate a npc.", aliases=["g"])
 async def generate(ctx, tag: typing.Optional[str]):
-    response = npc_generator.generate(tag)
-    await ctx.send(response)
+    traits = npc_generator.generate(tag)
+    if traits['gender'] == WOM:
+        e_gender = 'e'
+    elif traits['gender'] == ENB:
+        e_gender = '·e'
+    else:
+        e_gender = ""
+    if FEM in npc_generator.tags[traits['accessories'].upper()]:
+        det_accessories = "une"
+    elif MASC in npc_generator.tags[traits['accessories'].upper()]:
+        det_accessories = "un"
+    elif PLUR in npc_generator.tags[traits['accessories'].upper()]:
+        det_accessories = "de"
+    elif PLURS in npc_generator.tags[traits['accessories'].upper()]:
+        det_accessories = "des"
+    else:
+        det_accessories = ""
+    npc_description = f"{traits['name']} est un{e_gender} {traits['job']} {traits['specie']} d'apparence " \
+                      f"{traits['appearance']}, {traits['behavior']}, semble être {traits['personality']} et " \
+                      f"a {det_accessories} {traits['accessories']}"
+    await ctx.send(npc_description)
 
 
 bot.run(TOKEN)
