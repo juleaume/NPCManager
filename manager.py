@@ -138,8 +138,6 @@ class NPCGenerator:
     def get_characteristics(game: str, specie: str):
         stats = ConfigParser()
         stats.read("stats.ini", "utf8")
-        if '·' in specie:
-            specie = specie[:-2]
         if game == "sw":
             try:
                 vig_b, agi_b, int_b, rus_b, vol_b, pre_b = stats[game.upper()][specie].split(', ')
@@ -151,20 +149,24 @@ class NPCGenerator:
         elif game == "fantasy":
             try:
                 for_b, agi_b, con_b, int_b, sag_b, cha_b = stats[game.upper()][specie].split(', ')
-                return get_char(game, int(for_b)), get_char(game, int(agi_b)), get_char(game, int(con_b)), \
-                       get_char(game, int(int_b)), get_char(game, int(sag_b)), get_char(game, int(cha_b))
+                stat_for = get_char(game, int(for_b))
+                stat_agi = get_char(game, int(agi_b))
+                stat_con = get_char(game, int(con_b))
+                stat_int = get_char(game, int(int_b))
+                stat_sag = get_char(game, int(sag_b))
+                stat_cha = get_char(game, int(cha_b))
+                return f"{stat_for} ({(stat_for - 10) >> 1:+d})", f"{stat_agi} ({(stat_agi - 10) >> 1:+d})", \
+                       f"{stat_con} ({(stat_con - 10) >> 1:+d})", f"{stat_int} ({(stat_int - 10) >> 1:+d})", \
+                       f"{stat_sag} ({(stat_sag - 10) >> 1:+d})", f"{stat_cha} ({(stat_cha - 10) >> 1:+d})"
             except KeyError:
                 print(f"No stats for {specie} in game {game}")
                 return 0, 0, 0, 0, 0, 0
 
 
 def get_char(game: str, bias: int):
-    if game == "sw":
-        return round(random.triangular(1, 6, bias))
-    elif game == "fantasy":
-        return round(random.triangular(1, 20, bias))
-    else:
-        return 0
+    max_stat = 6 if game == SW_TAG else 20
+    stat = round(random.gauss(bias, 1))
+    return stat if 0 < stat <= max_stat else bias
 
 
 def create_name(length):
