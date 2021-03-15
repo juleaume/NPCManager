@@ -5,7 +5,7 @@ import typing
 from discord.ext import commands
 from dotenv import load_dotenv
 
-from manager import NPCGenerator
+from manager import NPCGenerator, create_name
 from constant_strings import *
 
 load_dotenv()
@@ -47,6 +47,14 @@ async def generate(ctx, tag: typing.Optional[str]):
                       f"{traits['appearance']}, {traits['behavior']}, semble être {traits['personality']} et " \
                       f"a {det_accessories} {traits['accessories']}"
     await ctx.send(npc_description)
+
+
+@bot.command(name="name", help="Generate a name.", aliases=["n"])
+async def get_name(ctx, length: typing.Optional[int]):
+    if length is None:
+        length = 2
+    name = create_name(length)
+    await ctx.send(name)
 
 
 bot.run(TOKEN)
