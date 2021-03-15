@@ -4,7 +4,7 @@ from configparser import ConfigParser
 from PySide2.QtCore import Qt
 from PySide2.QtGui import QClipboard
 from PySide2.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QPushButton, QWidget, QTabWidget, \
-    QLineEdit, QHBoxLayout, QLabel, QCheckBox
+    QLineEdit, QHBoxLayout, QLabel, QCheckBox, QComboBox
 
 from manager import NPCGenerator
 from constant_strings import *
@@ -102,47 +102,61 @@ class GeneratorPanel(QWidget):
         self.copy_npc_button.clicked.connect(self.get_description)
         self.layout.addWidget(self.copy_npc_button)
 
+        game_selection = QHBoxLayout()
+        game_selection.addWidget(QLabel("Jeu :"), 0, Qt.AlignRight)
+        self.game_combo = QComboBox()
+        self.game_combo.addItems(["Star Wars", "OGL"])
+        self.game_combo.currentTextChanged.connect(self.set_characteristics)
+        game_selection.addWidget(self.game_combo)
+        self.layout.addLayout(game_selection)
+
         self.stat_button = QPushButton("Générer caractéristiques")
         self.stat_button.clicked.connect(self.get_characteristics)
         self.layout.addWidget(self.stat_button)
 
         self.carac_line = QHBoxLayout()
 
-        vig_layout = QVBoxLayout()
-        vig_layout.addWidget(QLabel("Vigueur"), 0, Qt.AlignCenter)
-        self.vigueur = QLabel()
-        vig_layout.addWidget(self.vigueur, 0, Qt.AlignCenter)
-        self.carac_line.addLayout(vig_layout)
+        stat_1_layout = QVBoxLayout()
+        self.stat_1_label = QLabel("Vigueur")
+        stat_1_layout.addWidget(self.stat_1_label, 0, Qt.AlignCenter)
+        self.stat_1 = QLabel()
+        stat_1_layout.addWidget(self.stat_1, 0, Qt.AlignCenter)
+        self.carac_line.addLayout(stat_1_layout)
 
-        agi_layout = QVBoxLayout()
-        agi_layout.addWidget(QLabel("Agilité"), 0, Qt.AlignCenter)
-        self.agilite = QLabel()
-        agi_layout.addWidget(self.agilite, 0, Qt.AlignCenter)
-        self.carac_line.addLayout(agi_layout)
+        stat_2_layout = QVBoxLayout()
+        self.stat_2_label = QLabel("Agilité")
+        stat_2_layout.addWidget(self.stat_2_label, 0, Qt.AlignCenter)
+        self.stat_2 = QLabel()
+        stat_2_layout.addWidget(self.stat_2, 0, Qt.AlignCenter)
+        self.carac_line.addLayout(stat_2_layout)
 
-        int_layout = QVBoxLayout()
-        int_layout.addWidget(QLabel("Intelligence"), 0, Qt.AlignCenter)
-        self.intelligence = QLabel()
-        int_layout.addWidget(self.intelligence, 0, Qt.AlignCenter)
-        self.carac_line.addLayout(int_layout)
+        stat_3_layout = QVBoxLayout()
+        self.stat_3_label = QLabel("Intelligence")
+        stat_3_layout.addWidget(self.stat_3_label, 0, Qt.AlignCenter)
+        self.stat_3 = QLabel()
+        stat_3_layout.addWidget(self.stat_3, 0, Qt.AlignCenter)
+        self.carac_line.addLayout(stat_3_layout)
 
-        rus_layout = QVBoxLayout()
-        rus_layout.addWidget(QLabel("Ruse"), 0, Qt.AlignCenter)
-        self.ruse = QLabel()
-        rus_layout.addWidget(self.ruse, 0, Qt.AlignCenter)
-        self.carac_line.addLayout(rus_layout)
+        stat_4_layout = QVBoxLayout()
+        self.stat_4_label = QLabel("Ruse")
+        stat_4_layout.addWidget(self.stat_4_label, 0, Qt.AlignCenter)
+        self.stat_4 = QLabel()
+        stat_4_layout.addWidget(self.stat_4, 0, Qt.AlignCenter)
+        self.carac_line.addLayout(stat_4_layout)
 
-        vol_layout = QVBoxLayout()
-        vol_layout.addWidget(QLabel("Volonté"), 0, Qt.AlignCenter)
-        self.volonte = QLabel()
-        vol_layout.addWidget(self.volonte, 0, Qt.AlignCenter)
-        self.carac_line.addLayout(vol_layout)
+        stat_5_layout = QVBoxLayout()
+        self.stat_5_label = QLabel("Volonté")
+        stat_5_layout.addWidget(self.stat_5_label, 0, Qt.AlignCenter)
+        self.stat_5 = QLabel()
+        stat_5_layout.addWidget(self.stat_5, 0, Qt.AlignCenter)
+        self.carac_line.addLayout(stat_5_layout)
 
-        pre_layout = QVBoxLayout()
-        pre_layout.addWidget(QLabel("Présence"), 0, Qt.AlignCenter)
-        self.presence = QLabel()
-        pre_layout.addWidget(self.presence, 0, Qt.AlignCenter)
-        self.carac_line.addLayout(pre_layout)
+        stat_6_layout = QVBoxLayout()
+        self.stat_6_label = QLabel("Présence")
+        stat_6_layout.addWidget(self.stat_6_label, 0, Qt.AlignCenter)
+        self.stat_6 = QLabel()
+        stat_6_layout.addWidget(self.stat_6, 0, Qt.AlignCenter)
+        self.carac_line.addLayout(stat_6_layout)
 
         self.layout.addLayout(self.carac_line)
 
@@ -187,16 +201,31 @@ class GeneratorPanel(QWidget):
                           f"{self.personality_label.text()} et a {self.accessories_label.text()}"
         QClipboard().setText(npc_description)
 
-    def get_characteristics(self):
-        vigueur, agilite, intelligence, \
-        ruse, volonte, presence = self.npc.get_characteristics("sw", self.specie_label.text().upper())
-        self.vigueur.setText(str(vigueur))
-        self.agilite.setText(str(agilite))
-        self.intelligence.setText(str(intelligence))
-        self.ruse.setText(str(ruse))
-        self.volonte.setText(str(volonte))
-        self.presence.setText(str(presence))
+    def set_characteristics(self):
+        if self.game_combo.currentText() == STAR_WARS:
+            self.stat_1_label.setText("Vigueur")
+            self.stat_2_label.setText("Agilité")
+            self.stat_3_label.setText("Intelligence")
+            self.stat_4_label.setText("Ruse")
+            self.stat_5_label.setText("Volonté")
+            self.stat_6_label.setText("Présence")
+        elif self.game_combo.currentText() == OGL:
+            self.stat_1_label.setText("Force")
+            self.stat_2_label.setText("Agilité")
+            self.stat_3_label.setText("Constitution")
+            self.stat_4_label.setText("Intelligence")
+            self.stat_5_label.setText("Sagesse")
+            self.stat_6_label.setText("Charisme")
 
+    def get_characteristics(self):
+        stat_1, stat_2, stat_3, stat_4, stat_5, stat_6 = \
+            self.npc.get_characteristics(GAMES[self.game_combo.currentText()], self.specie_label.text().upper())
+        self.stat_1.setText(str(stat_1))
+        self.stat_2.setText(str(stat_2))
+        self.stat_3.setText(str(stat_3))
+        self.stat_4.setText(str(stat_4))
+        self.stat_5.setText(str(stat_5))
+        self.stat_6.setText(str(stat_6))
 
 
 def main():

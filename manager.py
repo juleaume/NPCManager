@@ -160,6 +160,14 @@ class NPCGenerator:
             except KeyError:
                 print(f"No stats for {specie} in game {game}")
                 return 0, 0, 0, 0, 0, 0
+        elif game == "fantasy":
+            try:
+                for_b, agi_b, con_b, int_b, sag_b, cha_b = stats[game.upper()][specie].split(', ')
+                return get_char(game, int(for_b)), get_char(game, int(agi_b)), get_char(game, int(con_b)), \
+                       get_char(game, int(int_b)), get_char(game, int(sag_b)), get_char(game, int(cha_b))
+            except KeyError:
+                print(f"No stats for {specie} in game {game}")
+                return 0, 0, 0, 0, 0, 0
 
 
 def get_char(game: str, bias: int):
