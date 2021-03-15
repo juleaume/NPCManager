@@ -51,7 +51,7 @@ class NPCGenerator:
 
         accessories = self.select_trait("ACCESSORIES", tags).lower()
 
-        traits["name"] = name.capitalize()
+        traits["name"] = name
         traits["gender"] = gender
         traits["job"] = job
         traits["specie"] = specie
@@ -186,13 +186,16 @@ def create_name(length):
         "i", "ia", "ie", "ii", "io", "o", "oa", "oe", "ou", "oi", "oo", "oui"
     ]
     name = ""
-    for _ in range(length):
-        name += random.choice(consonnes) + random.choice(voyelles)
-        if random.randint(0, 1):
+    for i in range(length):
+        seg = random.choice(consonnes) + random.choice(voyelles)
+        if not name or name[-1] in ["'", "-", " "]:
+            seg = seg.capitalize()
+        name += seg
+        if i+1 < length and random.randint(0, 1):
             name += random.choice(["", "'", "-", " "])
     if random.randint(0, 1):
         name += random.choice(consonnes)
-    return name.capitalize()
+    return name
 
 
 def main():
