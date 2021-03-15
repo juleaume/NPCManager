@@ -64,7 +64,7 @@ class GeneratorPanel(QWidget):
         self.specie_label = QLineEdit()
         self.specie_label.setFont(npc_font)
         self.line_layout.addWidget(self.specie_label)
-        appearance_label = QLabel("d'apparence")
+        appearance_label = QLabel("plutôt")
         appearance_label.setFont(npc_font)
         self.line_layout.addWidget(appearance_label)
         self.appearance_label = QLineEdit()
@@ -268,7 +268,7 @@ class GeneratorPanel(QWidget):
 
     def get_description(self):
         npc_description = f"{self.name_label.text()} est {self.job_label.text()} {self.specie_label.text()} " \
-                          f"d'apparence {self.appearance_label.text()}, {self.behavior_label.text()}, semble être " \
+                          f"plutôt {self.appearance_label.text()}, {self.behavior_label.text()}, semble être " \
                           f"{self.personality_label.text()} et a {self.accessories_label.text()}"
         QClipboard().setText(npc_description)
 

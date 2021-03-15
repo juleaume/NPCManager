@@ -41,7 +41,7 @@ async def generate(ctx, tag: typing.Optional[str]):
         det_accessories = "des"
     else:
         det_accessories = ""
-    npc_description = f"{traits['name']} est un{e_gender} {traits['job']} {traits['specie']} d'apparence " \
+    npc_description = f"{traits['name']} est un{e_gender} {traits['job']} {traits['specie']} plutôt " \
                       f"{traits['appearance']}, {traits['behavior']}, semble être {traits['personality']} et " \
                       f"a {det_accessories} {traits['accessories']}"
     await ctx.send(npc_description)

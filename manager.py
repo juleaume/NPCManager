@@ -37,7 +37,7 @@ class NPCGenerator:
         specie, _ = self.get_gendered_trait(gender, "SPECIES", tags)
 
         job, _ = self.get_gendered_trait(gender, "JOBS", tags)
-        appearance = self.select_trait("APPEARANCES", tags)
+        appearance, _ = self.get_gendered_trait(gender, "APPEARANCES", tags)
         behavior, behavior_key = self.get_gendered_trait(gender, "BEHAVIOR", tags)
         if "adj" in self.tags[behavior_key.upper()]:
             behavior = f"est {behavior}"
@@ -215,7 +215,7 @@ def main():
         det_accessories = "des"
     else:
         det_accessories = ""
-    npc_description = f"{traits['name']} est un{e_gender} {traits['job']} {traits['specie']} d'apparence " \
+    npc_description = f"{traits['name']} est un{e_gender} {traits['job']} {traits['specie']} plutôt " \
                       f"{traits['appearance']}, {traits['behavior']}, semble être {traits['personality']} et " \
                       f"a {det_accessories} {traits['accessories']}"
     print(npc_description)
