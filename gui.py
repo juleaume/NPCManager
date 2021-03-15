@@ -4,7 +4,7 @@ from configparser import ConfigParser
 from PySide2.QtCore import Qt
 from PySide2.QtGui import QClipboard, QFont
 from PySide2.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QPushButton, QWidget, QTabWidget, \
-    QLineEdit, QHBoxLayout, QLabel, QCheckBox, QComboBox, QTextEdit, QGroupBox
+    QLineEdit, QHBoxLayout, QLabel, QCheckBox, QComboBox, QTextEdit, QGroupBox, QDialog
 
 from manager import NPCGenerator
 from constant_strings import *
@@ -46,6 +46,9 @@ class GeneratorPanel(QWidget):
         self.tag_line.addWidget(QLabel("Tags :"))
         self.tags = QLineEdit()
         self.tag_line.addWidget(self.tags)
+        self.search_tags = QPushButton("Ajouter des tags...")
+        self.search_tags.clicked.connect(lambda: self.tags_selection())
+        self.tag_line.addWidget(self.search_tags)
         self.layout.addLayout(self.tag_line)
 
         self.line_layout = QHBoxLayout()
@@ -299,6 +302,31 @@ class GeneratorPanel(QWidget):
         self.stat_4.setText(f"{stat_4}")
         self.stat_5.setText(f"{stat_5}")
         self.stat_6.setText(f"{stat_6}")
+
+    def tags_selection(self):
+        def add_tags():
+            added_tags = ""
+            for _tag, box in tags.items():
+                if box.isChecked():
+                    added_tags += _tag + ', '
+            self.tags.setText(added_tags.strip(', '))
+        selection = QDialog(self.parent)
+        layout = QVBoxLayout()
+        tags = dict()
+        for tag in self.npc.get_all_tags():
+            tags[tag] = QCheckBox(tag)
+            layout.addWidget(tags[tag])
+        button_line = QHBoxLayout()
+        add_button = QPushButton("Ajouter")
+        add_button.clicked.connect(add_tags)
+        add_button.clicked.connect(selection.close)
+        button_line.addWidget(add_button)
+        close_button = QPushButton("Annuler")
+        close_button.clicked.connect(selection.close)
+        button_line.addWidget(close_button)
+        layout.addLayout(button_line)
+        selection.setLayout(layout)
+        selection.exec_()
 
 
 def main():
