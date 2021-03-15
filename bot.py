@@ -29,8 +29,6 @@ async def generate(ctx, tag: typing.Optional[str]):
     traits = npc_generator.generate(tag)
     if traits['gender'] == WOM:
         e_gender = 'e'
-    elif traits['gender'] == ENB:
-        e_gender = '·e'
     else:
         e_gender = ""
     if FEM in npc_generator.tags[traits['accessories'].upper()]:
