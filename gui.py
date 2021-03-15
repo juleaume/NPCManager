@@ -2,9 +2,9 @@ import sys
 from configparser import ConfigParser
 
 from PySide2.QtCore import Qt
-from PySide2.QtGui import QClipboard
+from PySide2.QtGui import QClipboard, QFont
 from PySide2.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QPushButton, QWidget, QTabWidget, \
-    QLineEdit, QHBoxLayout, QLabel, QCheckBox, QComboBox
+    QLineEdit, QHBoxLayout, QLabel, QCheckBox, QComboBox, QTextEdit, QGroupBox
 
 from manager import NPCGenerator
 from constant_strings import *
@@ -139,49 +139,64 @@ class GeneratorPanel(QWidget):
 
         self.carac_line = QHBoxLayout()
 
+        font = QFont()
+        font.setPointSize(50)
+        self.stat_1_group = QGroupBox("Vigueur")
         stat_1_layout = QVBoxLayout()
-        self.stat_1_label = QLabel("Vigueur")
-        stat_1_layout.addWidget(self.stat_1_label, 0, Qt.AlignCenter)
         self.stat_1 = QLabel()
+        self.stat_1.setFont(font)
         stat_1_layout.addWidget(self.stat_1, 0, Qt.AlignCenter)
-        self.carac_line.addLayout(stat_1_layout)
+        self.stat_1_group.setLayout(stat_1_layout)
+        self.carac_line.addWidget(self.stat_1_group)
 
+        self.stat_2_group = QGroupBox("Agilité")
         stat_2_layout = QVBoxLayout()
-        self.stat_2_label = QLabel("Agilité")
-        stat_2_layout.addWidget(self.stat_2_label, 0, Qt.AlignCenter)
         self.stat_2 = QLabel()
+        self.stat_2.setFont(font)
         stat_2_layout.addWidget(self.stat_2, 0, Qt.AlignCenter)
-        self.carac_line.addLayout(stat_2_layout)
+        self.stat_2_group.setLayout(stat_2_layout)
+        self.carac_line.addWidget(self.stat_2_group)
 
+        self.stat_3_group = QGroupBox("Intelligence")
         stat_3_layout = QVBoxLayout()
-        self.stat_3_label = QLabel("Intelligence")
-        stat_3_layout.addWidget(self.stat_3_label, 0, Qt.AlignCenter)
         self.stat_3 = QLabel()
+        self.stat_3.setFont(font)
         stat_3_layout.addWidget(self.stat_3, 0, Qt.AlignCenter)
-        self.carac_line.addLayout(stat_3_layout)
+        self.stat_3_group.setLayout(stat_3_layout)
+        self.carac_line.addWidget(self.stat_3_group)
 
+        self.stat_4_group = QGroupBox("Ruse")
         stat_4_layout = QVBoxLayout()
-        self.stat_4_label = QLabel("Ruse")
-        stat_4_layout.addWidget(self.stat_4_label, 0, Qt.AlignCenter)
         self.stat_4 = QLabel()
+        self.stat_4.setFont(font)
         stat_4_layout.addWidget(self.stat_4, 0, Qt.AlignCenter)
-        self.carac_line.addLayout(stat_4_layout)
+        self.stat_4_group.setLayout(stat_4_layout)
+        self.carac_line.addWidget(self.stat_4_group)
 
+        self.stat_5_group = QGroupBox("Volonté")
         stat_5_layout = QVBoxLayout()
-        self.stat_5_label = QLabel("Volonté")
-        stat_5_layout.addWidget(self.stat_5_label, 0, Qt.AlignCenter)
         self.stat_5 = QLabel()
+        self.stat_5.setFont(font)
         stat_5_layout.addWidget(self.stat_5, 0, Qt.AlignCenter)
-        self.carac_line.addLayout(stat_5_layout)
+        self.stat_5_group.setLayout(stat_5_layout)
+        self.carac_line.addWidget(self.stat_5_group)
 
+        self.stat_6_group = QGroupBox("Présence")
         stat_6_layout = QVBoxLayout()
-        self.stat_6_label = QLabel("Présence")
-        stat_6_layout.addWidget(self.stat_6_label, 0, Qt.AlignCenter)
         self.stat_6 = QLabel()
+        self.stat_6.setFont(font)
         stat_6_layout.addWidget(self.stat_6, 0, Qt.AlignCenter)
-        self.carac_line.addLayout(stat_6_layout)
+        self.stat_6_group.setLayout(stat_6_layout)
+        self.carac_line.addWidget(self.stat_6_group)
 
         self.layout.addLayout(self.carac_line)
+
+        note_group = QGroupBox("Notes")
+        note_layout = QVBoxLayout()
+        self.additional_note = QTextEdit()
+        note_layout.addWidget(self.additional_note)
+        note_group.setLayout(note_layout)
+        self.layout.addWidget(note_group)
 
         self.setLayout(self.layout)
 
@@ -236,19 +251,19 @@ class GeneratorPanel(QWidget):
 
     def set_characteristics(self):
         if self.game_combo.currentText() == STAR_WARS:
-            self.stat_1_label.setText("Vigueur")
-            self.stat_2_label.setText("Agilité")
-            self.stat_3_label.setText("Intelligence")
-            self.stat_4_label.setText("Ruse")
-            self.stat_5_label.setText("Volonté")
-            self.stat_6_label.setText("Présence")
+            self.stat_1_group.setTitle("Vigueur")
+            self.stat_2_group.setTitle("Agilité")
+            self.stat_3_group.setTitle("Intelligence")
+            self.stat_4_group.setTitle("Ruse")
+            self.stat_5_group.setTitle("Volonté")
+            self.stat_6_group.setTitle("Présence")
         elif self.game_combo.currentText() == OGL:
-            self.stat_1_label.setText("Force")
-            self.stat_2_label.setText("Agilité")
-            self.stat_3_label.setText("Constitution")
-            self.stat_4_label.setText("Intelligence")
-            self.stat_5_label.setText("Sagesse")
-            self.stat_6_label.setText("Charisme")
+            self.stat_1_group.setTitle("Force")
+            self.stat_2_group.setTitle("Agilité")
+            self.stat_3_group.setTitle("Constitution")
+            self.stat_4_group.setTitle("Intelligence")
+            self.stat_5_group.setTitle("Sagesse")
+            self.stat_6_group.setTitle("Charisme")
 
     def get_characteristics(self):
         stat_1, stat_2, stat_3, stat_4, stat_5, stat_6 = \
