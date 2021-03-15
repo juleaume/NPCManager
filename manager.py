@@ -170,29 +170,29 @@ def get_char(game: str, bias: int):
 
 
 def create_name(length):
-    consonnes = [
-        "z", "zl", "r", "rh", "t", "th", "tl", "tw", "y", "yh", "p", "pr", "ph", "pl", "q", "qu", "qs", "qh", "ql", "s",
-        "sz", "st", "sp", "sq", "ss", "sf", "sh", "sk", "sm", "sw", "sc", "sv", "sb", "sn", "d", "dz", "dr", "dh", "dl",
-        "f", "fz", "fr", "ft", "fp", "fh", "fl", "g", "gz", "gr", "gu", "gh", "gl", "h", "j", "jz", "js", "jh", "jl",
-        "k", "kz", "kr", "ks", "kh", "kj", "kl", "kc", "l", "lh", "m", "mh", "mm", "mn", "w", "wz", "wr", "wh", "x",
-        "xh", "c", "cz", "cr", "ct", "cs", "ch", "ck", "cl", "cw", "cx", "cc", "cv", "cn", "v", "vz", "vr", "vh", "vl",
-        "b", "bz", "br", "bs", "bf", "bh", "bl", "bw", "bv", ""
+    consonants = [
+        "z", "zl", "r", "rh", "t", "tr", "th", "tl", "tw", "y", "yh", "p", "pr", "ph", "pl", "q", "qu", "qs", "qh",
+        "ql", "s", "sz", "st", "sp", "sq", "ss", "sf", "sh", "sk", "sm", "sw", "sc", "sv", "sb", "sn", "d", "dz", "dr",
+        "dh", "dl", "f", "fz", "fr", "ft", "fp", "fh", "fl", "g", "gz", "gr", "gu", "gh", "gl", "h", "j", "jz", "js",
+        "jh", "jl", "k", "kz", "kr", "ks", "kh", "kj", "kl", "kc", "l", "lh", "m", "mh", "mm", "mn", "w", "wz", "wr",
+        "wh", "x", "xh", "c", "cz", "cr", "ct", "cs", "ch", "ck", "cl", "cw", "cx", "cc", "cv", "cn", "v", "vz", "vr",
+        "vh", "vl", "b", "bz", "br", "bs", "bf", "bh", "bl", "bw", "bv", ""
     ]
 
-    voyelles = [
+    vowels = [
         "a", "aa", "ae", "aë", "au", "ai", "aï", "ao", "e", "ea", "ee", "eu", "ei", "eo", "y", "u", "ua", "ue", "uu",
         "ui", "uo", "i", "ia", "ie", "ii", "io", "o", "oa", "oe", "oë", "ou", "oi", "oo", "oui"
     ]
     name = ""
     for i in range(length):
-        seg = random.choice(consonnes) + random.choice(voyelles)
+        seg = random.choice(consonants) + random.choice(vowels)
         if not name or name[-1] in ["'", "-", " "]:
             seg = seg.capitalize()
         name += seg
         if i + 1 < length and random.randint(0, 1):
             name += random.choice(["", "'", "-", " "])
     if random.randint(0, 1):
-        name += random.choice(consonnes)
+        name += random.choice(consonants)
     return name
 
 
