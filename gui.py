@@ -25,14 +25,14 @@ class Window(QMainWindow):
         self.tabs = QTabWidget()
         self.central_layout.addWidget(self.tabs)
         self.nb_npc = 1
-        self.tabs.addTab(GeneratorPanel(self.npc), "NPC 1")
-        self.add_npc_button = QPushButton("Add NPC")
+        self.tabs.addTab(GeneratorPanel(self.npc), "PNJ 1")
+        self.add_npc_button = QPushButton("Ajouter PNJ")
         self.add_npc_button.clicked.connect(lambda: self.add_npc())
         self.central_layout.addWidget(self.add_npc_button)
 
     def add_npc(self):
         self.nb_npc += 1
-        self.tabs.addTab(GeneratorPanel(self.npc), f"NPC {self.nb_npc}")
+        self.tabs.addTab(GeneratorPanel(self.npc), f"PNJ {self.nb_npc}")
 
 
 class GeneratorPanel(QWidget):
@@ -94,15 +94,15 @@ class GeneratorPanel(QWidget):
 
         self.layout.addLayout(self.fix_line)
 
-        self.generate_button = QPushButton("Generate NPC")
+        self.generate_button = QPushButton("Générer PNJ")
         self.generate_button.clicked.connect(lambda: self.get_generated())
         self.layout.addWidget(self.generate_button)
 
-        self.copy_npc_button = QPushButton("Copy NPC")
+        self.copy_npc_button = QPushButton("Copier PNJ")
         self.copy_npc_button.clicked.connect(self.get_description)
         self.layout.addWidget(self.copy_npc_button)
 
-        self.stat_button = QPushButton("Generate characteristics")
+        self.stat_button = QPushButton("Générer caractéristiques")
         self.stat_button.clicked.connect(self.get_characteristics)
         self.layout.addWidget(self.stat_button)
 
