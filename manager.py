@@ -165,7 +165,7 @@ class NPCGenerator:
 
 def get_char(game: str, bias: int):
     max_stat = 6 if game == SW_TAG else 20
-    stat = round(random.gauss(bias, 1))
+    stat = round(random.gauss(bias, 2))
     return stat if 0 < stat <= max_stat else bias
 
 
