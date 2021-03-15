@@ -71,30 +71,52 @@ class GeneratorPanel(QWidget):
         self.line_layout.addWidget(self.accessories_label)
 
         self.fix_line = QHBoxLayout()
+        self.fixes = list()
         self.fix_name = QCheckBox("fixer nom")
+        self.fixes.append(self.fix_name)
         self.fix_line.addWidget(self.fix_name)
 
         self.fix_job = QCheckBox("fixer métier")
+        self.fixes.append(self.fix_job)
         self.fix_line.addWidget(self.fix_job)
 
         self.fix_specie = QCheckBox("fixer espèce")
+        self.fixes.append(self.fix_specie)
         self.fix_line.addWidget(self.fix_specie)
 
         self.fix_appearance = QCheckBox("fixer apparence")
+        self.fixes.append(self.fix_appearance)
         self.fix_line.addWidget(self.fix_appearance)
 
         self.fix_behavior = QCheckBox("fixer comportement")
+        self.fixes.append(self.fix_behavior)
         self.fix_line.addWidget(self.fix_behavior)
 
         self.fix_personality = QCheckBox("fixer personnalité")
+        self.fixes.append(self.fix_personality)
         self.fix_line.addWidget(self.fix_personality)
 
         self.fix_accessories = QCheckBox("fixer accessoire")
+        self.fixes.append(self.fix_accessories)
         self.fix_line.addWidget(self.fix_accessories)
 
         self.layout.addLayout(self.fix_line)
 
+        fix_buttons_lines = QHBoxLayout()
+        self.reset_button = QPushButton("Libérer tous les champs")
+        self.reset_button.clicked.connect(self.reset_all_fixes)
+        fix_buttons_lines.addWidget(self.reset_button)
+        self.fix_all_button = QPushButton("Fixer tous les champs")
+        self.fix_all_button.clicked.connect(self.set_all_fixes)
+        fix_buttons_lines.addWidget(self.fix_all_button)
+        self.invert_button = QPushButton("Inverser les champs")
+        self.invert_button.clicked.connect(self.invert_all_fixes)
+        fix_buttons_lines.addWidget(self.invert_button)
+
+        self.layout.addLayout(fix_buttons_lines)
+
         self.generate_button = QPushButton("Générer PNJ")
+        self.generate_button.setFixedHeight(75)
         self.generate_button.clicked.connect(lambda: self.get_generated())
         self.layout.addWidget(self.generate_button)
 
@@ -111,6 +133,7 @@ class GeneratorPanel(QWidget):
         self.layout.addLayout(game_selection)
 
         self.stat_button = QPushButton("Générer caractéristiques")
+        self.stat_button.setFixedHeight(75)
         self.stat_button.clicked.connect(self.get_characteristics)
         self.layout.addWidget(self.stat_button)
 
@@ -161,6 +184,18 @@ class GeneratorPanel(QWidget):
         self.layout.addLayout(self.carac_line)
 
         self.setLayout(self.layout)
+
+    def set_all_fixes(self):
+        for box in self.fixes:
+            box.setChecked(True)
+
+    def reset_all_fixes(self):
+        for box in self.fixes:
+            box.setChecked(False)
+
+    def invert_all_fixes(self):
+        for box in self.fixes:
+            box.setChecked(not box.isChecked())
 
     def get_generated(self):
         traits = self.npc.generate(*self.tags.text().split(', '))
