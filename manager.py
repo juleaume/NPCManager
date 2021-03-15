@@ -37,7 +37,7 @@ class NPCGenerator:
         specie, _ = self.get_gendered_trait(gender, "SPECIES", tags)
 
         job, _ = self.get_gendered_trait(gender, "JOBS", tags)
-        appearance, _ = self.get_gendered_trait(gender, "APPEARANCES", tags)
+        appearance = self.select_trait("APPEARANCES", tags)
         behavior, behavior_key = self.get_gendered_trait(gender, "BEHAVIOR", tags)
         if "adj" in self.tags[behavior_key.upper()]:
             behavior = f"est {behavior}"
