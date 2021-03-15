@@ -14,7 +14,7 @@ class Window(QMainWindow):
     def __init__(self, parent=None):
         super(Window, self).__init__(parent)
         self.setWindowTitle("NPC Generator")
-        self.setFixedWidth(1500)
+        self.setFixedWidth(1600)
         self.npc_config = ConfigParser()
         self.npc_config.read("npc.ini", "utf8")
         self.npc = NPCGenerator(self.npc_config)
@@ -268,12 +268,12 @@ class GeneratorPanel(QWidget):
     def get_characteristics(self):
         stat_1, stat_2, stat_3, stat_4, stat_5, stat_6 = \
             self.npc.get_characteristics(GAMES[self.game_combo.currentText()], self.specie_label.text().upper())
-        self.stat_1.setText(str(stat_1))
-        self.stat_2.setText(str(stat_2))
-        self.stat_3.setText(str(stat_3))
-        self.stat_4.setText(str(stat_4))
-        self.stat_5.setText(str(stat_5))
-        self.stat_6.setText(str(stat_6))
+        self.stat_1.setText(f"{stat_1}")
+        self.stat_2.setText(f"{stat_2}")
+        self.stat_3.setText(f"{stat_3}")
+        self.stat_4.setText(f"{stat_4}")
+        self.stat_5.setText(f"{stat_5}")
+        self.stat_6.setText(f"{stat_6}")
 
 
 def main():
