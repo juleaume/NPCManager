@@ -167,6 +167,7 @@ class GeneratorPanel(QWidget):
         stat_font = QFont()
         stat_font.setPointSize(50)
         self.stat_1_group = QGroupBox("Vigueur")
+        self.stat_1_group.setFont(npc_font)
         stat_1_layout = QVBoxLayout()
         self.stat_1 = QLabel()
         self.stat_1.setFont(stat_font)
@@ -175,6 +176,7 @@ class GeneratorPanel(QWidget):
         self.carac_line.addWidget(self.stat_1_group)
 
         self.stat_2_group = QGroupBox("Agilité")
+        self.stat_2_group.setFont(npc_font)
         stat_2_layout = QVBoxLayout()
         self.stat_2 = QLabel()
         self.stat_2.setFont(stat_font)
@@ -183,6 +185,7 @@ class GeneratorPanel(QWidget):
         self.carac_line.addWidget(self.stat_2_group)
 
         self.stat_3_group = QGroupBox("Intelligence")
+        self.stat_3_group.setFont(npc_font)
         stat_3_layout = QVBoxLayout()
         self.stat_3 = QLabel()
         self.stat_3.setFont(stat_font)
@@ -191,6 +194,7 @@ class GeneratorPanel(QWidget):
         self.carac_line.addWidget(self.stat_3_group)
 
         self.stat_4_group = QGroupBox("Ruse")
+        self.stat_4_group.setFont(npc_font)
         stat_4_layout = QVBoxLayout()
         self.stat_4 = QLabel()
         self.stat_4.setFont(stat_font)
@@ -199,6 +203,7 @@ class GeneratorPanel(QWidget):
         self.carac_line.addWidget(self.stat_4_group)
 
         self.stat_5_group = QGroupBox("Volonté")
+        self.stat_5_group.setFont(npc_font)
         stat_5_layout = QVBoxLayout()
         self.stat_5 = QLabel()
         self.stat_5.setFont(stat_font)
@@ -207,6 +212,7 @@ class GeneratorPanel(QWidget):
         self.carac_line.addWidget(self.stat_5_group)
 
         self.stat_6_group = QGroupBox("Présence")
+        self.stat_6_group.setFont(npc_font)
         stat_6_layout = QVBoxLayout()
         self.stat_6 = QLabel()
         self.stat_6.setFont(stat_font)
