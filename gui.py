@@ -136,6 +136,7 @@ class GeneratorPanel(QWidget):
         self.layout.addLayout(fix_buttons_lines)
 
         self.generate_button = QPushButton("Générer PNJ")
+        self.generate_button.setFont(npc_font)
         self.generate_button.setFixedHeight(75)
         self.generate_button.clicked.connect(lambda: self.get_generated())
         self.layout.addWidget(self.generate_button)
@@ -153,6 +154,7 @@ class GeneratorPanel(QWidget):
         self.layout.addLayout(game_selection)
 
         self.stat_button = QPushButton("Générer caractéristiques")
+        self.stat_button.setFont(npc_font)
         self.stat_button.setFixedHeight(75)
         self.stat_button.clicked.connect(self.get_characteristics)
         self.layout.addWidget(self.stat_button)
