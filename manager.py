@@ -65,18 +65,10 @@ class NPCGenerator:
     def get_gender(tags: set):
         if GENDERS.issubset(tags):
             return random.choice(list(GENDERS))
-        elif {WOM, ENB}.issubset(tags):
-            return random.choice([WOM, ENB])
-        elif {MAN, ENB}.issubset(tags):
-            return random.choice([MAN, ENB])
-        elif {WOM, MAN}.issubset(tags):
-            return random.choice([WOM, MAN])
         elif WOM in tags:
             return WOM
         elif MASC in tags:
             return MASC
-        elif ENB in tags:
-            return ENB
         else:
             return random.choice(list(GENDERS))
 
@@ -87,16 +79,12 @@ class NPCGenerator:
             if not genders or gender in genders:
                 if gender == WOM and GENDERED in self.tags[selected_trait.upper()]:
                     return f"{selected_trait}e", selected_trait
-                elif gender == ENB and GENDERED in self.tags[selected_trait.upper()]:
-                    return f"{selected_trait}·e", selected_trait
                 else:
                     return selected_trait, selected_trait
             else:
                 if GENDERED in self.tags[selected_trait.upper()]:
                     if gender == WOM:
                         return f"{selected_trait}e", selected_trait
-                    elif gender == ENB:
-                        return f"{selected_trait}·e", selected_trait
                     elif gender == MAN:
                         return selected_trait, selected_trait
 
@@ -213,8 +201,6 @@ def main():
     traits = npc_generator.generate()
     if traits['gender'] == WOM:
         e_gender = 'e'
-    elif traits['gender'] == ENB:
-        e_gender = '·e'
     else:
         e_gender = ""
     if FEM in npc_generator.tags[traits['accessories'].upper()]:

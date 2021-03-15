@@ -166,8 +166,6 @@ class GeneratorPanel(QWidget):
         traits = self.npc.generate(*self.tags.text().split(', '))
         if traits['gender'] == WOM:
             e_gender = 'e'
-        elif traits['gender'] == ENB:
-            e_gender = '·e'
         else:
             e_gender = ""
         if FEM in self.npc.tags[traits['accessories'].upper()]:
