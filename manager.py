@@ -180,8 +180,8 @@ def create_name(length):
     ]
 
     voyelles = [
-        "a", "aa", "ae", "au", "ai", "ao", "e", "ea", "ee", "eu", "ei", "eo", "y", "u", "ua", "ue", "uu", "ui", "uo",
-        "i", "ia", "ie", "ii", "io", "o", "oa", "oe", "ou", "oi", "oo", "oui"
+        "a", "aa", "ae", "aë", "au", "ai", "aï", "ao", "e", "ea", "ee", "eu", "ei", "eo", "y", "u", "ua", "ue", "uu",
+        "ui", "uo", "i", "ia", "ie", "ii", "io", "o", "oa", "oe", "oë", "ou", "oi", "oo", "oui"
     ]
     name = ""
     for i in range(length):
@@ -189,7 +189,7 @@ def create_name(length):
         if not name or name[-1] in ["'", "-", " "]:
             seg = seg.capitalize()
         name += seg
-        if i+1 < length and random.randint(0, 1):
+        if i + 1 < length and random.randint(0, 1):
             name += random.choice(["", "'", "-", " "])
     if random.randint(0, 1):
         name += random.choice(consonnes)
