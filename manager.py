@@ -32,7 +32,8 @@ class NPCGenerator:
         tags -= GENDERS
         tags.add(gender)
 
-        name = self.select_trait("NAMES", tags)
+        # name = self.select_trait("NAMES", tags)
+        name = create_name(random.randint(1, 3))
         specie, _ = self.get_gendered_trait(gender, "SPECIES", tags)
 
         job, _ = self.get_gendered_trait(gender, "JOBS", tags)
@@ -168,6 +169,30 @@ def get_char(game: str, bias: int):
         return round(random.triangular(1, 20, bias))
     else:
         return 0
+
+
+def create_name(length):
+    consonnes = [
+        "z", "zl", "r", "rh", "t", "th", "tl", "tw", "y", "yh", "p", "pr", "ph", "pl", "q", "qu", "qs", "qh", "ql", "s",
+        "sz", "st", "sp", "sq", "ss", "sf", "sh", "sk", "sm", "sw", "sc", "sv", "sb", "sn", "d", "dz", "dr", "dh", "dl",
+        "f", "fz", "fr", "ft", "fp", "fh", "fl", "g", "gz", "gr", "gu", "gh", "gl", "h", "j", "jz", "js", "jh", "jl",
+        "k", "kz", "kr", "ks", "kh", "kj", "kl", "kc", "l", "lh", "m", "mh", "mm", "mn", "w", "wz", "wr", "wh", "x",
+        "xh", "c", "cz", "cr", "ct", "cs", "ch", "ck", "cl", "cw", "cx", "cc", "cv", "cn", "v", "vz", "vr", "vh", "vl",
+        "b", "bz", "br", "bs", "bf", "bh", "bl", "bw", "bv", ""
+    ]
+
+    voyelles = [
+        "a", "aa", "ae", "au", "ai", "ao", "e", "ea", "ee", "eu", "ei", "eo", "y", "u", "ua", "ue", "uu", "ui", "uo",
+        "i", "ia", "ie", "ii", "io", "o", "oa", "oe", "ou", "oi", "oo", "oui"
+    ]
+    name = ""
+    for _ in range(length):
+        name += random.choice(consonnes) + random.choice(voyelles)
+        if random.randint(0, 1):
+            name += random.choice(["", "'", "-", " "])
+    if random.randint(0, 1):
+        name += random.choice(consonnes)
+    return name.capitalize()
 
 
 def main():
