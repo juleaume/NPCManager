@@ -14,7 +14,7 @@ class Window(QMainWindow):
     def __init__(self, parent=None):
         super(Window, self).__init__(parent)
         self.setWindowTitle("NPC Generator")
-        self.setFixedWidth(1600)
+        self.setFixedWidth(1750)
         self.npc_config = ConfigParser()
         self.npc_config.read("npc.ini", "utf8")
         self.npc = NPCGenerator(self.npc_config)
@@ -25,19 +25,20 @@ class Window(QMainWindow):
         self.tabs = QTabWidget()
         self.central_layout.addWidget(self.tabs)
         self.nb_npc = 1
-        self.tabs.addTab(GeneratorPanel(self.npc), "PNJ 1")
+        self.tabs.addTab(GeneratorPanel(self.npc, self), "PNJ 1")
         self.add_npc_button = QPushButton("Ajouter PNJ")
         self.add_npc_button.clicked.connect(lambda: self.add_npc())
         self.central_layout.addWidget(self.add_npc_button)
 
     def add_npc(self):
         self.nb_npc += 1
-        self.tabs.addTab(GeneratorPanel(self.npc), f"PNJ {self.nb_npc}")
+        self.tabs.addTab(GeneratorPanel(self.npc, self), f"PNJ {self.nb_npc}")
 
 
 class GeneratorPanel(QWidget):
     def __init__(self, npc_generator: NPCGenerator, parent=None):
         super(GeneratorPanel, self).__init__(parent)
+        self.parent = parent
         self.npc = npc_generator
         self.layout = QVBoxLayout()
 
@@ -48,27 +49,46 @@ class GeneratorPanel(QWidget):
         self.layout.addLayout(self.tag_line)
 
         self.line_layout = QHBoxLayout()
+        npc_font = QFont()
+        npc_font.setPointSize(15)
         self.name_label = QLineEdit()
+        self.name_label.textChanged.connect(self.set_tab_name)
+        self.name_label.setFont(npc_font)
         self.line_layout.addWidget(self.name_label)
-        self.line_layout.addWidget(QLabel("est"))
+        verb_label = QLabel("est")
+        verb_label.setFont(npc_font)
+        self.line_layout.addWidget(verb_label)
         self.job_label = QLineEdit()
+        self.job_label.setFont(npc_font)
         self.line_layout.addWidget(self.job_label)
         self.specie_label = QLineEdit()
+        self.specie_label.setFont(npc_font)
         self.line_layout.addWidget(self.specie_label)
-        self.line_layout.addWidget(QLabel(','))
-        self.line_layout.addWidget(QLabel("d'apparence"))
+        appearance_label = QLabel("d'apparence")
+        appearance_label.setFont(npc_font)
+        self.line_layout.addWidget(appearance_label)
         self.appearance_label = QLineEdit()
+        self.appearance_label.setFont(npc_font)
         self.line_layout.addWidget(self.appearance_label)
-        self.line_layout.addWidget(QLabel(','))
+        comma_label = QLabel(',')
+        comma_label.setFont(npc_font)
+        self.line_layout.addWidget(comma_label)
         self.behavior_label = QLineEdit()
+        self.behavior_label.setFont(npc_font)
         self.line_layout.addWidget(self.behavior_label)
-        self.line_layout.addWidget(QLabel(", semble être"))
+        personality_label = QLabel(", semble être")
+        personality_label.setFont(npc_font)
+        self.line_layout.addWidget(personality_label)
         self.personality_label = QLineEdit()
+        self.personality_label.setFont(npc_font)
         self.line_layout.addWidget(self.personality_label)
-        self.layout.addLayout(self.line_layout)
-        self.line_layout.addWidget(QLabel("et a"))
+        accessories_label = QLabel("et a")
+        accessories_label.setFont(npc_font)
+        self.line_layout.addWidget(accessories_label)
         self.accessories_label = QLineEdit()
+        self.accessories_label.setFont(npc_font)
         self.line_layout.addWidget(self.accessories_label)
+        self.layout.addLayout(self.line_layout)
 
         self.fix_line = QHBoxLayout()
         self.fixes = list()
@@ -139,12 +159,12 @@ class GeneratorPanel(QWidget):
 
         self.carac_line = QHBoxLayout()
 
-        font = QFont()
-        font.setPointSize(50)
+        stat_font = QFont()
+        stat_font.setPointSize(50)
         self.stat_1_group = QGroupBox("Vigueur")
         stat_1_layout = QVBoxLayout()
         self.stat_1 = QLabel()
-        self.stat_1.setFont(font)
+        self.stat_1.setFont(stat_font)
         stat_1_layout.addWidget(self.stat_1, 0, Qt.AlignCenter)
         self.stat_1_group.setLayout(stat_1_layout)
         self.carac_line.addWidget(self.stat_1_group)
@@ -152,7 +172,7 @@ class GeneratorPanel(QWidget):
         self.stat_2_group = QGroupBox("Agilité")
         stat_2_layout = QVBoxLayout()
         self.stat_2 = QLabel()
-        self.stat_2.setFont(font)
+        self.stat_2.setFont(stat_font)
         stat_2_layout.addWidget(self.stat_2, 0, Qt.AlignCenter)
         self.stat_2_group.setLayout(stat_2_layout)
         self.carac_line.addWidget(self.stat_2_group)
@@ -160,7 +180,7 @@ class GeneratorPanel(QWidget):
         self.stat_3_group = QGroupBox("Intelligence")
         stat_3_layout = QVBoxLayout()
         self.stat_3 = QLabel()
-        self.stat_3.setFont(font)
+        self.stat_3.setFont(stat_font)
         stat_3_layout.addWidget(self.stat_3, 0, Qt.AlignCenter)
         self.stat_3_group.setLayout(stat_3_layout)
         self.carac_line.addWidget(self.stat_3_group)
@@ -168,7 +188,7 @@ class GeneratorPanel(QWidget):
         self.stat_4_group = QGroupBox("Ruse")
         stat_4_layout = QVBoxLayout()
         self.stat_4 = QLabel()
-        self.stat_4.setFont(font)
+        self.stat_4.setFont(stat_font)
         stat_4_layout.addWidget(self.stat_4, 0, Qt.AlignCenter)
         self.stat_4_group.setLayout(stat_4_layout)
         self.carac_line.addWidget(self.stat_4_group)
@@ -176,7 +196,7 @@ class GeneratorPanel(QWidget):
         self.stat_5_group = QGroupBox("Volonté")
         stat_5_layout = QVBoxLayout()
         self.stat_5 = QLabel()
-        self.stat_5.setFont(font)
+        self.stat_5.setFont(stat_font)
         stat_5_layout.addWidget(self.stat_5, 0, Qt.AlignCenter)
         self.stat_5_group.setLayout(stat_5_layout)
         self.carac_line.addWidget(self.stat_5_group)
@@ -184,7 +204,7 @@ class GeneratorPanel(QWidget):
         self.stat_6_group = QGroupBox("Présence")
         stat_6_layout = QVBoxLayout()
         self.stat_6 = QLabel()
-        self.stat_6.setFont(font)
+        self.stat_6.setFont(stat_font)
         stat_6_layout.addWidget(self.stat_6, 0, Qt.AlignCenter)
         self.stat_6_group.setLayout(stat_6_layout)
         self.carac_line.addWidget(self.stat_6_group)
@@ -243,6 +263,9 @@ class GeneratorPanel(QWidget):
         if not self.fix_accessories.isChecked():
             self.accessories_label.setText(f"{det_accessories} {traits['accessories']}")
 
+    def set_tab_name(self):
+        self.parent.tabs.setTabText(self.parent.tabs.currentIndex(), self.name_label.text())
+
     def get_description(self):
         npc_description = f"{self.name_label.text()} est {self.job_label.text()} {self.specie_label.text()} " \
                           f"d'apparence {self.appearance_label.text()}, {self.behavior_label.text()}, semble être " \
@@ -259,7 +282,7 @@ class GeneratorPanel(QWidget):
             self.stat_6_group.setTitle("Présence")
         elif self.game_combo.currentText() == OGL:
             self.stat_1_group.setTitle("Force")
-            self.stat_2_group.setTitle("Agilité")
+            self.stat_2_group.setTitle("Dexterité")
             self.stat_3_group.setTitle("Constitution")
             self.stat_4_group.setTitle("Intelligence")
             self.stat_5_group.setTitle("Sagesse")
