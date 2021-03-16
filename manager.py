@@ -93,7 +93,7 @@ class NPCGenerator:
                     elif gender == MAN:
                         return selected_trait, selected_trait
 
-    def get_trait(self, trait):
+    def _get_trait(self, trait):
         return random.choice(self.traits[trait])
 
     def get_tags(self, section):
@@ -125,19 +125,22 @@ class NPCGenerator:
         return tags
 
     def select_trait(self, trait: str, tags: set) -> str:
-        selected_trait = self.get_trait(trait)
-        if not self.check_tag(trait, tags):
-            return selected_trait
-        while not tags.issubset(set(self.tags[selected_trait.upper()])):
-            selected_trait = self.get_trait(trait)
-        return selected_trait
+        tags = set(self.get_tags_per_section()[trait]) & tags
+        selected_trait = self._get_trait(trait)  # we select a random trait from the list
+        if not self.check_tag(trait, tags):  # if there is no perfect match
+            return selected_trait  # we return the selected trait
+        while not tags.issubset(set(self.tags[selected_trait.upper()])):  # If a perfect match exists
+            if selected_trait == "officier de spatioport":
+                print(tags, set(self.tags[selected_trait.upper()]))
+            selected_trait = self._get_trait(trait)  # we pick another one to hope for something new
+        return selected_trait  # and we return a trait that ALL of the tags match
 
     def check_tag(self, section, tags):
-        tags_list = self.get_tags(section)
-        for tag in tags_list:
-            if set(tags).issubset(tag):
-                return True
-        return False
+        tags_list = self.get_tags(section)  # we get all the tags list for avery elements of this section
+        for tag in tags_list:  # for each tag list
+            if set(tags).issubset(tag):  # if there is at least one match
+                return True  # we say there is at least one
+        return False  # else we say there is no perfect match
 
     @staticmethod
     def get_characteristics(game: str, specie: str):
@@ -186,7 +189,7 @@ def create_name(length):
 
     vowels = [
         "a", "aa", "ae", "aë", "au", "ai", "aï", "ao", "e", "ea", "ee", "eu", "ei", "eo", "y", "u", "ua", "ue", "uu",
-        "ui", "uo", "i", "ia", "ie", "ii", "io", "o", "oa", "oe", "oë", "ou", "oi", "oo", "oui"
+        "ui", "uo", "i", "ia", "ie", "ii", "io", "o", "oa", "oe", "oë", "ou", "oi", "oo"
     ]
     name = ""
     for i in range(length):
