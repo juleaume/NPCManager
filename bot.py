@@ -25,8 +25,8 @@ async def on_ready():
 
 
 @bot.command(name="generate", help="Generate a npc.", aliases=["g"])
-async def generate(ctx, tag: typing.Optional[str]):
-    traits = npc_generator.generate(tag)
+async def generate(ctx, *tag: typing.Optional[str]):
+    traits = npc_generator.generate(*tag)
     if traits['gender'] == WOM:
         e_gender = 'e'
     else:
