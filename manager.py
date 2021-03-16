@@ -34,6 +34,11 @@ class NPCGenerator:
 
         # name = self.select_trait("NAMES", tags)
         name = create_name(random.randint(1, 3))
+        if TITLE in tags:
+            tags -= {TITLE}
+            title = self.select_trait("TITLES", tags)
+            name = title.capitalize() + " " + name
+            tags.add(title.lower())
         specie, _ = self.get_gendered_trait(gender, "SPECIES", tags)
 
         job, _ = self.get_gendered_trait(gender, "JOBS", tags)
