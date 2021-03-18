@@ -90,8 +90,8 @@ class NPCGenerator:
             return random.choice(list(GENDERS))
         elif WOM in tags:
             return WOM
-        elif MASC in tags:
-            return MASC
+        elif MAN in tags:
+            return MAN
         else:
             return random.choice(list(GENDERS))
 
