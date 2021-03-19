@@ -175,7 +175,14 @@ class NPCGenerator:
         :return: the chosen trait
         """
         tags = set(self.get_tags_per_section()[trait]) & tags
-        selected_trait = self._get_trait(trait)  # we select a random trait from the list
+        possible_traits = list()  # we create a list of possibilities
+        for each_trait in self.traits[trait]:  # for each trait in the config file
+            if tags.issubset(tags):
+                possible_traits.append(each_trait)  # add it to the list
+        if possible_traits:  # if there are at least one choice
+            selected_trait = random.choice(possible_traits)
+        else:
+            selected_trait = self._get_trait(trait)  # we select a random trait from the list
         if not self.check_tag(trait, tags):  # if there is no perfect match
             return selected_trait  # we return the selected trait
         while not tags.issubset(set(self.tags[selected_trait.upper()])):  # If a perfect match exists
