@@ -42,6 +42,9 @@ class GeneratorPanel(QWidget):
         self.npc = npc_generator
         self.layout = QVBoxLayout()
 
+        self.tool_tip = ConfigParser()
+        self.tool_tip.read("descriptions.ini")
+
         self.tag_line = QHBoxLayout()
         self.tag_line.addWidget(QLabel("Tags :"))
         self.tags = QLineEdit()
@@ -267,8 +270,10 @@ class GeneratorPanel(QWidget):
             self.name_label.setText(traits['name'])
         if not self.fix_job.isChecked():
             self.job_label.setText(f"un{e_gender} {traits['job']}")
+            self.job_label.setToolTip(self.tool_tip["JOBS"].get(traits['job'], "Occupation inconnue"))
         if not self.fix_specie.isChecked():
             self.specie_label.setText(traits['specie'])
+            self.specie_label.setToolTip(self.tool_tip["SPECIES"].get(self.specie_label.text(), "Espèce inconnue"))
         if not self.fix_appearance.isChecked():
             self.appearance_label.setText(traits['appearance'])
         if not self.fix_behavior.isChecked():
