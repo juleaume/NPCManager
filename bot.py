@@ -55,4 +55,12 @@ async def get_name(ctx, length: typing.Optional[int]):
     await ctx.send(name)
 
 
+@bot.command(name="tags", help="get the tags of the generator")
+async def get_tags(ctx):
+    tags = ""
+    for tag in npc_generator.get_tag_list():
+        tags += tag + " "
+    await ctx.send(tags)
+
+
 bot.run(TOKEN)

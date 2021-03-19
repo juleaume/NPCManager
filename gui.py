@@ -329,11 +329,9 @@ class GeneratorPanel(QWidget):
         selection = QDialog(self.parent)
         layout = QVBoxLayout()
         tags = dict()
-        working_tags = [MASC, FEM, PLUR, PLURS, ADJ, POSS, VERB, GENDERED, BEHAVE]
-        for tag in [TITLE] + self.npc.get_all_tags():
-            if tag not in working_tags:
-                tags[tag] = QCheckBox(tag)
-                layout.addWidget(tags[tag])
+        for tag in self.npc.get_tag_list():
+            tags[tag] = QCheckBox(tag)
+            layout.addWidget(tags[tag])
         button_line = QHBoxLayout()
         add_button = QPushButton("Ajouter")
         add_button.clicked.connect(add_tags)
@@ -345,6 +343,7 @@ class GeneratorPanel(QWidget):
         layout.addLayout(button_line)
         selection.setLayout(layout)
         selection.exec_()
+
 
 
 def main():

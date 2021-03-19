@@ -202,6 +202,12 @@ class NPCGenerator:
                 return True  # we say there is at least one
         return False  # else we say there is no perfect match
 
+    def get_tag_list(self):
+        working_tags = [MASC, FEM, PLUR, PLURS, ADJ, POSS, VERB, GENDERED, BEHAVE]
+        for tag in [TITLE] + self.get_all_tags():
+            if tag not in working_tags:
+                yield tag
+
     @staticmethod
     def get_characteristics(game: str, specie: str) -> Tuple[Union[int, str], Union[int, str], Union[int, str],
                                                              Union[int, str], Union[int, str], Union[int, str]]:
