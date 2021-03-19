@@ -43,7 +43,7 @@ class GeneratorPanel(QWidget):
         self.layout = QVBoxLayout()
 
         self.tool_tip = ConfigParser()
-        self.tool_tip.read("descriptions.ini")
+        self.tool_tip.read("descriptions.ini", "utf-8")
 
         self.tag_line = QHBoxLayout()
         self.tag_line.addWidget(QLabel("Tags :"))
@@ -329,9 +329,11 @@ class GeneratorPanel(QWidget):
         selection = QDialog(self.parent)
         layout = QVBoxLayout()
         tags = dict()
-        for tag in self.npc.get_all_tags():
-            tags[tag] = QCheckBox(tag)
-            layout.addWidget(tags[tag])
+        working_tags = [MASC, FEM, PLUR, PLURS, ADJ, POSS, VERB, GENDERED, BEHAVE]
+        for tag in [TITLE] + self.npc.get_all_tags():
+            if tag not in working_tags:
+                tags[tag] = QCheckBox(tag)
+                layout.addWidget(tags[tag])
         button_line = QHBoxLayout()
         add_button = QPushButton("Ajouter")
         add_button.clicked.connect(add_tags)

@@ -57,10 +57,10 @@ class NPCGenerator:
         job, _ = self.get_gendered_trait(gender, "JOBS", tags)
         appearance, _ = self.get_gendered_trait(gender, "APPEARANCES", tags)
         behavior, behavior_key = self.get_gendered_trait(gender, "BEHAVIOR", tags)  # the appearance key is kept because
-        if "adj" in self.tags[behavior_key.upper()]:  # we need it in case of gendered traits
+        if ADJ in self.tags[behavior_key.upper()]:  # we need it in case of gendered traits
             behavior = f"est {behavior}"
-        elif "poss" in self.tags[behavior_key.upper()]:
-            if "plur" in self.tags[behavior_key.upper()]:
+        elif POSS in self.tags[behavior_key.upper()]:
+            if PLUR in self.tags[behavior_key.upper()]:
                 behavior = f"a de {behavior}"
             else:
                 e_behavior = "e" if FEM in self.tags[behavior.upper()] else ""

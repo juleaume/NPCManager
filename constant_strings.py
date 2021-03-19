@@ -13,3 +13,7 @@ SW_TAG = "sw"
 OGL_TAG = "fantasy"
 GAMES = {STAR_WARS: SW_TAG, OGL: OGL_TAG}
 TITLE = "title"
+ADJ = "adj"
+POSS = "poss"
+VERB = "verb"
+BEHAVE = "behave"
