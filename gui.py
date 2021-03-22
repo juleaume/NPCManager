@@ -6,7 +6,7 @@ from PySide2.QtGui import QClipboard, QFont
 from PySide2.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QPushButton, QWidget, QTabWidget, \
     QLineEdit, QHBoxLayout, QLabel, QCheckBox, QComboBox, QTextEdit, QGroupBox, QDialog
 
-from manager import NPCGenerator
+from manager import NPCGenerator, apply_gender
 from constant_strings import *
 
 
@@ -44,6 +44,9 @@ class GeneratorPanel(QWidget):
 
         self.tool_tip = ConfigParser()
         self.tool_tip.read("descriptions.ini", "utf-8")
+
+        self.gender = ""
+        self.last_job = ""
 
         self.tag_line = QHBoxLayout()
         self.tag_line.addWidget(QLabel("Tags :"))
@@ -253,7 +256,8 @@ class GeneratorPanel(QWidget):
 
     def get_generated(self):
         traits = self.npc.generate(*self.tags.text().split(', '))
-        if traits['gender'] == WOM:
+        self.gender = traits["gender"]
+        if self.gender == WOM:
             e_gender = 'e'
         else:
             e_gender = ""
@@ -272,6 +276,7 @@ class GeneratorPanel(QWidget):
         if not self.fix_job.isChecked():
             self.job_label.setText(f"un{e_gender} {traits['job']}")
             self.job_label.setToolTip(self.tool_tip["JOBS"].get(traits['job'], "Occupation inconnue"))
+            self.last_job = traits["job"]
         if not self.fix_specie.isChecked():
             self.specie_label.setText(traits['specie'])
             self.specie_label.setToolTip(self.tool_tip["SPECIES"].get(self.specie_label.text(), "Espèce inconnue"))
@@ -310,8 +315,15 @@ class GeneratorPanel(QWidget):
             self.stat_6_group.setTitle("Charisme")
 
     def get_characteristics(self):
+        job_key = self.last_job \
+            if self.gender == MAN and GENDERED in self.npc.tags[self.last_job.upper()] \
+            else apply_gender(self.last_job)
         stat_1, stat_2, stat_3, stat_4, stat_5, stat_6 = \
-            self.npc.get_characteristics(GAMES[self.game_combo.currentText()], self.specie_label.text().upper())
+            self.npc.get_characteristics(
+                GAMES[self.game_combo.currentText()],
+                self.specie_label.text().upper(),
+                job_key
+            )
         self.stat_1.setText(f"{stat_1}")
         self.stat_2.setText(f"{stat_2}")
         self.stat_3.setText(f"{stat_3}")
@@ -326,6 +338,7 @@ class GeneratorPanel(QWidget):
                 if box.isChecked():
                     added_tags += _tag + ', '
             self.tags.setText(added_tags.strip(', '))
+
         selection = QDialog(self.parent)
         layout = QVBoxLayout()
         tags = dict()
@@ -343,7 +356,6 @@ class GeneratorPanel(QWidget):
         layout.addLayout(button_line)
         selection.setLayout(layout)
         selection.exec_()
-
 
 
 def main():

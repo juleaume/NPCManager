@@ -103,25 +103,7 @@ class NPCGenerator:
         :param tags: the tags to give rule
         :return: a tuple giving the gendered trait and its key to find its associated tags
         """
-        def apply_gender(t) -> str:
-            if t.endswith("er"):
-                return f"{t}e".replace("ere", "ère")
-            elif t.endswith("teur"):
-                return f"{t}".replace("teur", "trice")
-            elif t.endswith("eur"):
-                return f"{t}".replace("eur", "euse")
-            elif t.endswith("eux"):
-                return f"{t}".replace("eux", "euse")
-            elif t.endswith("if"):
-                return f"{t}".replace("if", "ive")
-            elif t.endswith("el"):
-                return f"{t}le"
-            elif t.endswith("et"):
-                return f"{t}te"
-            elif t.endswith("on") or t.endswith("en"):
-                return f"{t}ne"
-            else:
-                return f"{t}e"
+
         while True:
             selected_trait = self.select_trait(trait, tags)  # we choose a trait
             genders = GENDERS.intersection(self.tags[selected_trait.upper()])  # a get the gender of the trait
@@ -228,12 +210,14 @@ class NPCGenerator:
                 yield tag
 
     @staticmethod
-    def get_characteristics(game: str, specie: str) -> Tuple[Union[int, str], Union[int, str], Union[int, str],
-                                                             Union[int, str], Union[int, str], Union[int, str]]:
+    def get_characteristics(game: str, specie: str, job_key: str) -> Tuple[
+        Union[int, str], Union[int, str], Union[int, str],
+        Union[int, str], Union[int, str], Union[int, str]]:
         """
         generate random characteristics given a game and a specie
         :param game: the game played
         :param specie: the specie asked
+        :param job_key: the job specified
         :return: an array of stats given the game
         """
         stats = ConfigParser()
@@ -241,26 +225,52 @@ class NPCGenerator:
         if game == SW_TAG:
             try:
                 vig_b, agi_b, int_b, rus_b, vol_b, pre_b = stats[game.upper()][specie].split(', ')
-                return get_char(game, int(vig_b)), get_char(game, int(agi_b)), get_char(game, int(int_b)), \
-                       get_char(game, int(rus_b)), get_char(game, int(vol_b)), get_char(game, int(pre_b))
+                vig_m, agi_m, int_m, rus_m, vol_m, pre_m = stats[game.upper()].get(
+                    job_key, "0, 0, 0, 0, 0, 0").split(', ')
+                return get_char(game, int(vig_b) + int(vig_m)), get_char(game, int(agi_b) + int(agi_m)), \
+                       get_char(game, int(int_b) + int(int_m)), get_char(game, int(rus_b) + int(rus_m)), \
+                       get_char(game, int(vol_b) + int(vol_m)), get_char(game, int(pre_b) + int(pre_m))
             except KeyError:
                 print(f"No stats for {specie} in game {game}")
                 return 0, 0, 0, 0, 0, 0
         elif game == OGL_TAG:
             try:
                 for_b, agi_b, con_b, int_b, sag_b, cha_b = stats[game.upper()][specie].split(', ')
-                stat_for = get_char(game, int(for_b))
-                stat_agi = get_char(game, int(agi_b))
-                stat_con = get_char(game, int(con_b))
-                stat_int = get_char(game, int(int_b))
-                stat_sag = get_char(game, int(sag_b))
-                stat_cha = get_char(game, int(cha_b))
+                for_m, agi_m, con_m, int_m, sag_m, cha_m = stats[game.upper()].get(
+                    job_key, "10, 10, 10, 10, 10, 10").split(', ')
+                stat_for = get_char(game, int(for_b) + int(for_m))
+                stat_agi = get_char(game, int(agi_b) + int(agi_m))
+                stat_con = get_char(game, int(con_b) + int(con_m))
+                stat_int = get_char(game, int(int_b) + int(int_m))
+                stat_sag = get_char(game, int(sag_b) + int(sag_m))
+                stat_cha = get_char(game, int(cha_b) + int(cha_m))
                 return f"{stat_for} ({(stat_for - 10) >> 1:+d})", f"{stat_agi} ({(stat_agi - 10) >> 1:+d})", \
                        f"{stat_con} ({(stat_con - 10) >> 1:+d})", f"{stat_int} ({(stat_int - 10) >> 1:+d})", \
                        f"{stat_sag} ({(stat_sag - 10) >> 1:+d})", f"{stat_cha} ({(stat_cha - 10) >> 1:+d})"
             except KeyError:
                 print(f"No stats for {specie} in game {game}")
                 return 0, 0, 0, 0, 0, 0
+
+
+def apply_gender(t) -> str:
+    if t.endswith("er"):
+        return f"{t}e".replace("ere", "ère")
+    elif t.endswith("teur"):
+        return f"{t}".replace("teur", "trice")
+    elif t.endswith("eur"):
+        return f"{t}".replace("eur", "euse")
+    elif t.endswith("eux"):
+        return f"{t}".replace("eux", "euse")
+    elif t.endswith("if"):
+        return f"{t}".replace("if", "ive")
+    elif t.endswith("el"):
+        return f"{t}le"
+    elif t.endswith("et"):
+        return f"{t}te"
+    elif t.endswith("on") or t.endswith("en"):
+        return f"{t}ne"
+    else:
+        return f"{t}e"
 
 
 def get_char(game: str, mean: int) -> int:
@@ -331,7 +341,9 @@ def main():
                       f"{traits['appearance']}, {traits['behavior']}, semble être {traits['personality']} et " \
                       f"a {det_accessories} {traits['accessories']}"
     print(npc_description)
-    print(npc_generator.get_characteristics('sw', traits['specie']))
+    job_key = traits["job"] if traits['gender'] == MAN and GENDERED in npc_generator.tags[traits["job"].upper()] \
+        else apply_gender(traits["job"])
+    print(npc_generator.get_characteristics('sw', traits['specie'], job_key))
 
 
 if __name__ == '__main__':
