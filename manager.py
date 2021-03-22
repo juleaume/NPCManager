@@ -103,18 +103,37 @@ class NPCGenerator:
         :param tags: the tags to give rule
         :return: a tuple giving the gendered trait and its key to find its associated tags
         """
+        def apply_gender(t) -> str:
+            if t.endswith("er"):
+                return f"{t}e".replace("ere", "ère")
+            elif t.endswith("teur"):
+                return f"{t}".replace("teur", "trice")
+            elif t.endswith("eur"):
+                return f"{t}".replace("eur", "euse")
+            elif t.endswith("eux"):
+                return f"{t}".replace("eux", "euse")
+            elif t.endswith("if"):
+                return f"{t}".replace("if", "ive")
+            elif t.endswith("el"):
+                return f"{t}le"
+            elif t.endswith("et"):
+                return f"{t}te"
+            elif t.endswith("on") or t.endswith("en"):
+                return f"{t}ne"
+            else:
+                return f"{t}e"
         while True:
             selected_trait = self.select_trait(trait, tags)  # we choose a trait
             genders = GENDERS.intersection(self.tags[selected_trait.upper()])  # a get the gender of the trait
             if not genders or gender in genders:  # if there is no preferred gender or its associated gender matches
                 if gender == WOM and GENDERED in self.tags[selected_trait.upper()]:  # if the gender needs adjustments
-                    return f"{selected_trait}e", selected_trait  # add an e to the end
+                    return apply_gender(selected_trait), selected_trait  # add an e to the end
                 else:
                     return selected_trait, selected_trait  # else give it as it is
             else:  # if the preferred gendered does not match the trait's associated gender
                 if GENDERED in self.tags[selected_trait.upper()]:  # if the trait is gendered
                     if gender == WOM:
-                        return f"{selected_trait}e", selected_trait
+                        return apply_gender(selected_trait), selected_trait
                     elif gender == MAN:
                         return selected_trait, selected_trait  # if it is not, repeat until it is
 
@@ -177,7 +196,7 @@ class NPCGenerator:
         tags = set(self.get_tags_per_section()[trait]) & tags
         possible_traits = list()  # we create a list of possibilities
         for each_trait in self.traits[trait]:  # for each trait in the config file
-            if tags.issubset(tags):
+            if tags.issubset(self.tags[each_trait.upper()]):
                 possible_traits.append(each_trait)  # add it to the list
         if possible_traits:  # if there are at least one choice
             selected_trait = random.choice(possible_traits)
