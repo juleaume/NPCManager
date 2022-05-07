@@ -318,6 +318,122 @@ def create_name(length) -> str:
     return name
 
 
+def generate_name(specie: str, gender: str) -> str:
+    action = [
+        "Appelle", "Arpente", "Bâtit", "Brise", "Broie", "Chante", "Cherche", "Guide", "Gratte", "Mange", "Marche",
+        "Massacre", "Parle", "Porte", "Prend", "Sent", "Suit", "Tranche", "Veille", "Voit"
+    ]
+    anatomie = [
+        "Aile", "Barbe", "Bras", "Chair", "Coeur", "Crâne", "Crête", "Croc", "Dent", "Dos", "Echine", "Fourrure",
+        "Griffe", "Mâchoire", "Main", "OEil", "Pied", "Poing", "Souffle", "Tête"
+    ]
+    creature = [
+        "Aigle", "Ange", "Belette", "Cerf", "Cheval", "Corbeau", "Corneille", "Diable", "Dragon", "Faucon", "Homme",
+        "Lion", "Loup", "Molosse", "Monstre", "Rat", "Requin", "Sanglier", "Serpent", "Tigre"
+    ]
+    elements = [
+        "Aube", "Ciel", "Colline", "Crépuscule", "Eclair", "Etoile", "Feu", "Flamme", "Givre", "Lune", "Mer",
+        "Montagne", "Nuage", "Pierre", "Pluie", "Soleil", "Tempête", "Terre", "Tonnerre", "Vent"
+    ]
+    gemmes = [
+        "Acier", "Adamantine", "Argent", "Bronze", "Cuivre", "Diamant", "Emeraude", "Etain", "Fer", "Foyer", "Gemme",
+        "Granite", "Jade", "Minerai", "Mithril", "Onyx", "Opale", "Or", "Rubis", "Saphir"
+    ]
+    nature = [
+        "Arbre", "Bosquet", "Branche", "Brindille", "Caverne", "Chêne", "Epine", "Feuille", "Fleur", "Forêt", "Herbe",
+        "Mousse", "Orme", "Pin", "Printemps", "Racine", "Rivière", "Saule", "Vallée", "Vigne"
+    ]
+    negatif = [
+        "Brisé", "Cendres", "Déchiqueté", "Fétide", "Fléau", "Flétir", "Gris", "Malédiction", "Miasmes", "Mort", "Noir",
+        "Nuit", "Ombre", "Os", "Rouge", "Sang", "Sombre", "Ténèbres", "Venin", "Vil"
+    ]
+    positif = [
+        "Ame", "Aube", "Bénédiction", "Blanc", "Bleu", "Courageux", "Eté", "Gloire", "Héros", "Jour", "Juste", "Loi",
+        "Lumière", "Printemps", "Pur", "Roi", "Soleil", "Vérité", "Vert", "Voeu"
+    ]
+    titre = [
+
+    ]
+    outils = [
+        "Arc", "Bâton", "Bouclier", "Couteau", "Dague", "Enclume", "Epée", "Flèche", "Forge", "Garde", "Hache",
+        "Harpon", "Lame", "Marteau", "Masse", "Pique", "Pointe", "Roue", "Scie"
+    ]
+    elfique_pref = [
+        "Aen", "Ala", "And", "Ar", "Cas", "Cyl", "El", "Eln", "Fir", "Gael", "Hu", "Koeh", "Laer", "Lue", "Nail", "Rhy",
+        "Sere", "Tia", "Tele", "Zau"
+    ]
+    elfique_suf = [
+        "ael", "ari", "eth", "dil", "eil", "evar", "ir", "mus", "oth", "rad", "re", "riel", "rond", "sar", "sil",
+        "tahl", "thus", "uil", "vain", "wyn"
+    ]
+    nain_m = [
+
+    ]
+    nain_f = [
+
+    ]
+    humain_m = [
+        "Aiden", "Bruce", "Dirk", "Gareth", "Gregor", "Gustave", "Haslten", "Harold", "Jacques", "Jean", "Kirk", "Lief",
+        "Liam", "Patrick", "Robert", "Ronan", "Seth", "Steven", "Tom", "William"
+    ]
+    humain_f = [
+        "Abby", "Bridget", "Cate", "Marguerite", "Hélène", "Hilda", "Ingrid", "Jessica", "Linnea", "Maggie", "Natalia",
+        "Olga", "Rebecca", "Raelia", "Rose", "Sarah", "Scarlett", "Sophia", "Tamara", "Violette"
+    ]
+    orque_pref = [
+
+    ]
+    orque_suf = [
+
+    ]
+    reptilien_pre = [
+        "Geth", "Grath", "Gyss", "Hyss", "Kla", "Lath", "Lex", "Lyth", "Mor", "Nar", "Nyl", "Pesh", "Ssath", "Sser",
+        "Ssla", "Tla", "Xer", "Xyl", "Xyss"
+    ]
+    reptilien_suf = [
+        "chal", "chyss", "geth", "hesh", "hyll", "kesh", "klatch", "lyss", "mash", "moth", "myss", "resh", "ron", "ryn",
+        "tetch", "tek", "thyss", "toss", "xec", "yss"
+    ]
+
+    article = "le"
+    if gender == 'f':
+        article = "la"
+
+    t = roll_d(20)
+    if specie == 'artificiel':
+        if 0 < t <= 4:
+            return select(elfique_pref + reptilien_pre) + select(elfique_suf + reptilien_suf)
+        elif 4 < t <= 10:
+            return f"{select(outils)} {select(positif)}"
+        elif 10 < t <= 15:
+            return f"{select(creature)} {select(negatif)} de {select(humain_m + humain_f)}"
+        elif 15 < t:
+            return f"{select(creature)} de {select(gemmes)} {roll_d(20)}.{roll_d(9)}"
+    elif specie == 'drake':
+        if 0 < t <= 6:
+            return f"{select(anatomie)} de {select(elements)}"
+        elif 6 < t <= 12:
+            return f"{select(anatomie)} {select(negatif)}"
+        elif 12 < t <= 18:
+            return f"{select(anatomie)} {select(positif)}"
+        elif 18 < t:
+            return f"{select(reptilien_pre)}{select(reptilien_suf)} {article} {select(action)}"
+    elif specie == 'elfe':
+        nom = f"{select(elfique_pref)}{select(elfique_suf)}"
+        if 0 < t <= 6:
+            return f"{nom} {select(creature)}-{select(gemmes)}"
+        elif 6 < t <= 12:
+            return f"{nom} {select(anatomie)} de {select(elements)}"
+        elif 12 < t <= 18:
+            return f"{nom} {select(action)} {select(nature)}"
+        elif 18 < t:
+            return f"{nom} {article} {select(outils)}-{select(positif)}"
+
+
+def roll_d(n: int) -> int:
+    return random.randint(1, n)
+
+
 def main():
     npc = ConfigParser()
     npc.read("npc.ini", "utf8")
